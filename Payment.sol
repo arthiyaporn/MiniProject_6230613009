@@ -9,13 +9,17 @@ contract Payment {
     constructor(address payable _owner){
         owner = _owner;
     }
-
     function setReleaseTime(uint _seconds)external{
         releaseTime = block.timestamp + _seconds;
     } 
 
+    function deposit() public payable {}
+
+    function withdraw(address payable _to) public payable {
+        _to.transfer(payable(address(this)).balance);
+    }
+
     function release() public {
-        require(block.timestamp >= releaseTime ,"Wait");
         uint amount = address(this).balance;
         require(amount > 0,"Not enough");
         owner.transfer(amount);
